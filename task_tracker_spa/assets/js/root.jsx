@@ -77,12 +77,16 @@ update_login_form(data) {
       <Router>
         <div>
           <Header session={this.state.session} root={this} />
+          <div className="container">
+
           <Route path="/" exact={true} render={() =>
             <TaskList tasks={this.state.tasks} />
           } />
           <Route path="/users" exact={true} render={() =>
             <UserList users={this.state.users} />
           } />
+          </div>
+
         </div>
       </Router>
     </div>;
@@ -108,26 +112,27 @@ function Header(props) {
     </div>
   }
   return (<div>
-    <nav className="navbar navbar-expand-sm navbar-light bg-white">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
     <div className="container">
-      <div className="col-4">
-        <p><Link to={"/"} className="navbar-brand">Task Tracker</Link></p>
-      </div>
-      <div className="col-4">
-        <ul className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <Link to={"/users"} className="nav-link">Users</Link>
-          </li>
+  <Link to={"/"} className="navbar-brand">Task Tracker</Link>
+  <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span className="navbar-toggler-icon"></span>
+  </button>
 
-        </ul>
-      </div>
-      <div className="col-4">
-        {session_info}
-      </div>
+  <div className="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul className="navbar-nav mr-auto">
+      <li className="nav-item"><Link to={"/users"} className="nav-link">Users</Link></li>
+    </ul>
+    <div>
+      {session_info}
     </div>
-  </nav>
+  </div>
+  </div>
+</nav>
 
-  <Link to={"/users/new"}><button className="btn btnView">Register New User</button></Link>
+
+
+
   </div>
 )
 }
@@ -141,8 +146,6 @@ function TaskList(props) {
 
 function Task(props) {
   let {task} = props;
-  console.log(task.user_id);
-
 
   return <div className="card col-4">
     <div className="card-body">
