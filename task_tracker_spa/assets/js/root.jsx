@@ -15,11 +15,28 @@ class Root extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: props.tasks,
+      login_form: {email: "", password: ""},
+      session: null,
+      // tasks: props.tasks,
+      tasks: [],
       users: [],
     };
 
+    this.fetch_users();
+    this.fetch_tasks();
+  }
 
+  fetch_tasks() {
+    $.ajax("/api/v1/tasks", {
+      method: "get",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (resp) => {
+        let state1 = _.assign({}, this.state, { tasks: resp.data });
+        this.setState(state1);
+      },
+    });
   }
 
 
@@ -90,17 +107,29 @@ function Header(props) {
       <p>Logged in as {session.user_id}</p>
     </div>
   }
-  return <div className="row my-2">
-    <div className="col-3">
-      <h1><Link to={"/"}>Task Tracker</Link></h1>
+  return (<div>
+    <nav className="navbar navbar-expand-sm navbar-light bg-white">
+    <div className="container">
+      <div className="col-4">
+        <p><Link to={"/"} className="navbar-brand">Task Tracker</Link></p>
+      </div>
+      <div className="col-4">
+        <ul className="navbar-nav mr-auto">
+          <li className="nav-item">
+            <Link to={"/users"} className="nav-link">Users</Link>
+          </li>
+
+        </ul>
+      </div>
+      <div className="col-4">
+        {session_info}
+      </div>
     </div>
-    <div className="col-3">
-      <p><Link to={"/users"} onClick={root.fetch_users.bind(root)}>Users</Link></p>
-    </div>
-    <div className="col-6">
-      {session_info}
-    </div>
-  </div>;
+  </nav>
+
+  <Link to={"/users/new"}><button className="btn btnView">Register New User</button></Link>
+  </div>
+)
 }
 
 function TaskList(props) {
@@ -112,12 +141,29 @@ function TaskList(props) {
 
 function Task(props) {
   let {task} = props;
+  console.log(task.user_id);
+
+
   return <div className="card col-4">
     <div className="card-body">
       <h2 className="card-title">{task.name}</h2>
+      <p className="card-subtitle mb-2 text-muted">Time: {task.time}</p>
       <p className="card-text">{task.desc}</p>
+      <Complete task={task}/>
+
     </div>
   </div>;
+}
+
+function Complete(props) {
+  let {task} = props;
+  if (task.complete) {
+
+    return <p className="alert alert-success">completed</p>
+  } else {
+    return <p className="alert alert-warning">in progress</p>
+
+  }
 }
 
 function UserList(props) {
