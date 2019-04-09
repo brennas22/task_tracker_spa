@@ -14,8 +14,8 @@ alias TaskTrackerSpa.Users.User
 
 pwhash = Argon2.hash_pwd_salt("password")
 
-Repo.insert!(%User{email: "alice@example.com", password_hash: pwhash})
-Repo.insert!(%User{email: "bob@example.com", password_hash: pwhash})
+Repo.insert!(%User{email: "alice@example.com", password_hash: pwhash, admin: true})
+Repo.insert!(%User{email: "bob@example.com", password_hash: pwhash, admin: false})
 
 alias TaskTrackerSpa.Tasks.Task
 

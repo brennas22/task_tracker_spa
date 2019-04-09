@@ -2,10 +2,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
+import $ from 'jquery';
+import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 
 export default function root_init(node) {
   let tasks = window.tasks;
-  console.log("window tasks:" + tasks);
 
   ReactDOM.render(<Root tasks={tasks} />, node);
 }
@@ -15,20 +16,21 @@ class Root extends React.Component {
     super(props);
     this.state = {
       tasks: props.tasks,
+      users: [],
     };
-    console.log("state tasks:" + this.state.tasks);
 
-    //this.fetch_products();
+
   }
 
-  fetch_products() {
-    $.ajax("/api/v1/tasks", {
+
+  fetch_users() {
+    $.ajax("/api/v1/users", {
       method: "get",
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
       data: "",
       success: (resp) => {
-        let state1 = _.assign({}, this.state, { tasks: resp.data });
+        let state1 = _.assign({}, this.state, { users: resp.data });
         this.setState(state1);
       },
     });
@@ -36,10 +38,33 @@ class Root extends React.Component {
 
   render() {
     return <div>
-      <h1>hi</h1>
-      <TaskList tasks={this.state.tasks} />
+      <Router>
+        <div>
+          <Header root={this} />
+          <Route path="/" exact={true} render={() =>
+            <TaskList tasks={this.state.tasks} />
+          } />
+          <Route path="/users" exact={true} render={() =>
+            <UserList users={this.state.users} />
+          } />
+        </div>
+      </Router>
     </div>;
+
   }
+}
+
+function Header(props) {
+  let {root} = props;
+  return <div className="row my-2">
+    <div className="col-4">
+      <h1><Link to={"/"}>Task Tracker</Link></h1>
+    </div>
+    <div className="col-2">
+
+      <p><Link to={"/users"} onClick={root.fetch_users.bind(root)}>Users</Link></p>
+    </div>
+  </div>
 }
 
 function TaskList(props) {
@@ -57,4 +82,31 @@ function Task(props) {
       <p className="card-text">{task.desc}</p>
     </div>
   </div>;
+}
+
+function UserList(props) {
+  let rows = _.map(props.users, (uu) => <User key={uu.id} user={uu} />);
+  return <div className="row">
+    <div className="col-12">
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>email</th>
+            <th>admin?</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows}
+        </tbody>
+      </table>
+    </div>
+  </div>;
+}
+
+function User(props) {
+  let {user} = props;
+  return <tr>
+    <td>{user.email}</td>
+    <td>{user.admin ? "yes" : "no"}</td>
+  </tr>;
 }
