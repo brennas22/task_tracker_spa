@@ -2,11 +2,12 @@ defmodule TaskTrackerSpa.Tasks.Task do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "task" do
-    field :complete, :boolean, default: false
-    field :desc, :string
+  schema "tasks" do
     field :name, :string
+    field :desc, :string
     field :time, :decimal
+    field :complete, :boolean, default: false
+    belongs_to :user, TaskTrackerSpa.Users.User
 
     timestamps()
   end
@@ -14,7 +15,7 @@ defmodule TaskTrackerSpa.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:complete, :desc, :name, :time])
-    |> validate_required([:complete, :desc, :name, :time])
+    |> cast(attrs, [:name, :desc, :time, :complete, :user_id])
+    |> validate_required([:name, :desc, :time, :complete, :user_id])
   end
 end

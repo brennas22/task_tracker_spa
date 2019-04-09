@@ -21,6 +21,7 @@ defmodule TaskTrackerSpa.Tasks do
     Repo.all(Task)
   end
 
+
   @doc """
   Gets a single task.
 
