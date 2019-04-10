@@ -105,23 +105,6 @@ remove_cart_item(id) {
   });
     }
 
-  //   add_to_cart(product_id) {
-  //   let user_id = this.state.session.user_id;
-  //   let count = this.state.add_cart_forms.get(product_id) || 1;
-  //   $.ajax("/api/v1/cart_items", {
-  //     method: "post",
-  //     dataType: "json",
-  //     contentType: "application/json; charset=UTF-8",
-  //     data: JSON.stringify({cart_item: {product_id, user_id, count}}),
-  //     success: (resp) => {
-  //       //let cart1 = _.concat(this.state.cart, [resp.data]);
-  //       //let state1 = _.assign({}, this.state, { cart: cart1 });
-  //       //this.setState(state1);
-  //       this.fetch_cart();
-  //     }
-  //   });
-  // }
-
     send_post(path, req, on_success) {
     $.ajax(path, {
       method: "post",
