@@ -5,9 +5,10 @@ import _ from 'lodash';
 import $ from 'jquery';
 import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 
+import TaskList from './task_list';
+
 export default function root_init(node) {
   let tasks = window.tasks;
-
   ReactDOM.render(<Root tasks={tasks} />, node);
 }
 
@@ -80,7 +81,7 @@ update_login_form(data) {
           <div className="container">
 
           <Route path="/" exact={true} render={() =>
-            <TaskList tasks={this.state.tasks} />
+            <TaskList root={this} tasks={this.state.tasks} />
           } />
           <Route path="/users" exact={true} render={() =>
             <UserList users={this.state.users} />
@@ -129,34 +130,10 @@ function Header(props) {
   </div>
   </div>
 </nav>
-
-
-
-
   </div>
 )
 }
 
-function TaskList(props) {
-  let tasks = _.map(props.tasks, (t) => <Task key={t.id} task={t} />);
-  return <div className="row">
-    {tasks}
-  </div>;
-}
-
-function Task(props) {
-  let {task} = props;
-
-  return <div className="card col-4">
-    <div className="card-body">
-      <h2 className="card-title">{task.name}</h2>
-      <p className="card-subtitle mb-2 text-muted">Time: {task.time}</p>
-      <p className="card-text">{task.desc}</p>
-      <Complete task={task}/>
-
-    </div>
-  </div>;
-}
 
 function Complete(props) {
   let {task} = props;
