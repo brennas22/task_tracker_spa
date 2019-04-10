@@ -67,11 +67,70 @@ class Root extends React.Component {
   });
 }
 
+
+
 update_login_form(data) {
   let form1 = _.assign({}, this.state.login_form, data);
   let state1 = _.assign({}, this.state, { login_form: form1 });
   this.setState(state1);
 }
+
+remove_cart_item(id) {
+    $.ajax("/api/v1/tasks/" + id, {
+      method: "delete",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (_resp) => {
+        let cart1 = _.filter(this.state.tasks, (item) => item.id != id);
+        let state1 = _.assign({}, this.state, { tasks: cart1 });
+        this.setState(state1);
+      }
+    });
+  }
+
+
+
+  complete_item(task) {
+    task.complete = !task.complete;
+    $.ajax("/api/v1/tasks/"+task.id, {
+      method: "put",
+      dataType: "json",
+      headers: {"x-auth": this.state.session.token},
+      contentType: "application/json; charset=UTF-8",
+      data: JSON.stringify({task}),
+      success: (resp) => {
+        this.fetch_tasks();
+    },
+  });
+    }
+
+  //   add_to_cart(product_id) {
+  //   let user_id = this.state.session.user_id;
+  //   let count = this.state.add_cart_forms.get(product_id) || 1;
+  //   $.ajax("/api/v1/cart_items", {
+  //     method: "post",
+  //     dataType: "json",
+  //     contentType: "application/json; charset=UTF-8",
+  //     data: JSON.stringify({cart_item: {product_id, user_id, count}}),
+  //     success: (resp) => {
+  //       //let cart1 = _.concat(this.state.cart, [resp.data]);
+  //       //let state1 = _.assign({}, this.state, { cart: cart1 });
+  //       //this.setState(state1);
+  //       this.fetch_cart();
+  //     }
+  //   });
+  // }
+
+    send_post(path, req, on_success) {
+    $.ajax(path, {
+      method: "post",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: JSON.stringify(req),
+      success: on_success,
+    });
+  }
 
   render() {
     return <div>

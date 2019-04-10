@@ -24,7 +24,11 @@ function Task(props) {
       <p className="card-subtitle mb-2 text-muted">Time: {item.time}</p>
       <p className="card-text">{item.desc}</p>
       <Complete task={item} root={root}/>
+      <div className="row">
+      <button className="btn btn-danger" onClick={() => root.remove_cart_item(item.id)}>delete</button>
+      <button className="btn btn-secondary" onClick={() => root.complete_item(item)}>complete</button>
 
+      </div>
     </div>
   </div>;
 }
