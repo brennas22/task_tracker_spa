@@ -3,8 +3,14 @@ import _ from 'lodash';
 
 
 export default function TaskList(props) {
-  let {root, tasks, users} = props;
+  let {root, tasks, users, session} = props;
   let items = _.map(tasks, (item) => <Task key={item.id} item={item} root={root} users={users} />);
+  if (session == null) {
+    return <div>
+    <h1>Log in to view tasks</h1>
+    <p>Username: alice@example.com, Password: password</p>
+    </div>;
+  } else {
   return <div>
   <div className="row">
       </div>
@@ -14,11 +20,13 @@ export default function TaskList(props) {
       </div>
   </div>;
 }
+}
 
 function Task(props) {
   let {root, item, users} = props;
   let itemID = item.id;
   let find_user = _.find(users, ['id', itemID]);
+
   return <div className="card col-4">
     <div className="card-body">
       <h2 className="card-title">{item.name}</h2>
@@ -33,6 +41,7 @@ function Task(props) {
       </div>
     </div>
   </div>;
+
 }
 
 function Complete(props) {

@@ -22,6 +22,9 @@ class Root extends React.Component {
       // tasks: props.tasks,
       tasks: [],
       users: [],
+
+      task_form: {name: "", desc: "", time: "", complete: false, user_id: "1"},
+
     };
 
     this.fetch_users();
@@ -30,7 +33,83 @@ class Root extends React.Component {
     this.new_task = this.new_task.bind(this);
   }
 
+  update_task_form(data) {
+
+    let form1 = _.assign({}, this.state.task_form, data);
+    let state1 = _.assign({}, this.state, { task_form: form1 });
+    this.setState(state1);
+  }
+
+  submit_task() {
+    console.log(this.state.task_form.name);
+    console.log(this.state.task_form.desc);
+    console.log(this.state.task_form.time);
+    console.log(this.state.task_form.complete);
+    console.log(this.state.task_form.user_id);
+  }
+
+  new_task(event) {
+    event.preventDefault();
+  let name = this.state.task_form.name;
+  let desc = this.state.task_form.desc;
+  let time = this.state.task_form.time;
+  let comp = this.state.task_form.complete;
+  let user_id = this.state.task_form.user_id;
+  // console.log(JSON.stringify(this.state.task_form));
+
+  $.ajax("/api/v1/tasks", {
+    method: "post",
+    dataType: "json",
+    contentType: "application/json; charset=UTF-8",
+    data: JSON.stringify({tasks: {name, desc, time, comp, user_id}}),
+    // data: JSON.stringify(this.state.task_form),
+
+    success: (resp) => {
+      alert("hello");
+      // let state1 = _.assign({}, this.state, { session: resp.data });
+      // this.setState(state1);
+      // let cart1 = _.concat(this.state.tasks, [resp.data]);
+      // let state1 = _.assign({}, this.state, { tasks: cart1 });
+      // this.setState(state1);
+      // this.fetch_task();
+    }
+  });
+}
+
+// new_task(event) {
+//     event.preventDefault();
+//     var formData = new FormData(event.target);
+//     var object = {};
+//     formData.forEach(function(value, key){
+//       object[key] = value;
+//     })
+//     var data = JSON.stringify({task: object});
+//
+//     $.ajax("/api/v1/tasks", {
+//       method: 'post',
+//       dataType: "json",
+//       contentType: "application/json; charset=UTF-8",
+//       data: data,
+//       headers: {"x-auth": this.state.session.token},
+//       error: (resp) => {
+//         alert(resp)
+//       },
+//       success: (resp) => {
+//         store.dispatch({
+//           type: 'TASK_ADD',
+//           data: resp.data,
+//         })
+//         history.push("/")
+//       },
+//     });
+//   }
+
+
+
+
+
   fetch_tasks() {
+
     $.ajax("/api/v1/tasks", {
       method: "get",
       dataType: "json",
@@ -58,6 +137,7 @@ class Root extends React.Component {
   }
 
   login() {
+    console.log(this.state.login_form);
   $.ajax("/api/v1/auth", {
     method: "post",
     dataType: "json",
@@ -110,31 +190,6 @@ remove_cart_item(id) {
 
 
 
-  new_task(event) {
-    event.preventDefault();
-    var input = new FormData(event.target);
-
-    var tasks = {};
-    input.forEach(function(value, key){
-      tasks[key] = value;
-    })
-    console.log(tasks);
-    $.ajax("/api/v1/tasks", {
-      method: 'post',
-      dataType: "json",
-      contentType: "application/json; charset=UTF-8",
-      data: JSON.stringify({tasks: tasks}),
-      headers: {"x-auth": this.state.session.token},
-      error: (resp) => {
-        alert(resp)
-      },
-      success: (resp) => {
-        this.fetch_tasks();
-        history.push("/");
-      },
-    });
-  }
-
 
   render() {
     return <div>
@@ -142,9 +197,8 @@ remove_cart_item(id) {
         <div>
           <Header session={this.state.session} root={this} />
           <div className="container">
-
           <Route path="/" exact={true} render={() =>
-            <TaskList root={this} tasks={this.state.tasks} users={this.state.users} />
+            <TaskList root={this} tasks={this.state.tasks} users={this.state.users} session={this.state.session} />
           } />
           <Route path="/users" exact={true} render={() =>
             <UserList users={this.state.users} />
