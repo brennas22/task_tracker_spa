@@ -19,8 +19,6 @@ defmodule TaskTrackerSpaWeb.Router do
     get "/", PageController, :index
   end
 
-
-
   # Other scopes may use custom stacks.
   scope "/api/v1", TaskTrackerSpaWeb do
     pipe_through :api

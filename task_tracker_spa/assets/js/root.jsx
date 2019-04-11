@@ -6,6 +6,7 @@ import $ from 'jquery';
 import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 
 import TaskList from './task_list';
+import TaskForm from './task_form';
 
 export default function root_init(node) {
   let tasks = window.tasks;
@@ -25,6 +26,8 @@ class Root extends React.Component {
 
     this.fetch_users();
     this.fetch_tasks();
+
+    this.new_task = this.new_task.bind(this);
   }
 
   fetch_tasks() {
@@ -105,15 +108,33 @@ remove_cart_item(id) {
   });
     }
 
-    send_post(path, req, on_success) {
-    $.ajax(path, {
-      method: "post",
+
+
+  new_task(event) {
+    event.preventDefault();
+    var input = new FormData(event.target);
+
+    var tasks = {};
+    input.forEach(function(value, key){
+      tasks[key] = value;
+    })
+    console.log(tasks);
+    $.ajax("/api/v1/tasks", {
+      method: 'post',
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
-      data: JSON.stringify(req),
-      success: on_success,
+      data: JSON.stringify({tasks: tasks}),
+      headers: {"x-auth": this.state.session.token},
+      error: (resp) => {
+        alert(resp)
+      },
+      success: (resp) => {
+        this.fetch_tasks();
+        history.push("/");
+      },
     });
   }
+
 
   render() {
     return <div>
@@ -123,10 +144,13 @@ remove_cart_item(id) {
           <div className="container">
 
           <Route path="/" exact={true} render={() =>
-            <TaskList root={this} tasks={this.state.tasks} />
+            <TaskList root={this} tasks={this.state.tasks} users={this.state.users} />
           } />
           <Route path="/users" exact={true} render={() =>
             <UserList users={this.state.users} />
+          } />
+          <Route path="/tasks/new" exact={true} render={() =>
+            <TaskForm root={this} />
           } />
           </div>
 
@@ -172,6 +196,12 @@ function Header(props) {
   </div>
   </div>
 </nav>
+  <div className="row">
+  <div className="container">
+  <Link to={"/tasks/new"}><button className="btn btn-primary">New Task</button></Link>
+  </div>
+  </div>
+
   </div>
 )
 }
