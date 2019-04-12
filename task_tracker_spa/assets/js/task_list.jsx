@@ -25,15 +25,21 @@ export default function TaskList(props) {
 function Task(props) {
   let {root, item, users} = props;
   let itemID = item.id;
-  let find_user = _.find(users, ['id', itemID]);
+  // let find_user = _.find(users, ['id', itemID]);
+
 
   return <div className="card col-4">
     <div className="card-body">
       <h2 className="card-title">{item.name}</h2>
       <p className="card-subtitle mb-2 text-muted">Time: {item.time}</p>
       <p className="card-text">{item.desc}</p>
-      <p className="card-text">Assigned to: {find_user.email}</p>
+      <p className="card-text">Assigned to: {item.id}</p>
       <Complete task={item} root={root}/>
+      <div className="form-group">
+      <label htmlFor="time">Update time taken </label>
+      <input type="number" id="time" step="15" onChange={(ev) => root.enter_time(item, ev.target.value)}/>
+      </div>
+
       <div className="row btns">
       <button className="btn btn-danger" onClick={() => root.remove_cart_item(item.id)}>delete</button>
       <button className="btn btn-secondary" onClick={() => root.complete_item(item)}>mark complete</button>

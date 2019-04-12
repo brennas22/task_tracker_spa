@@ -48,6 +48,8 @@ class Root extends React.Component {
     console.log(this.state.task_form.user_id);
   }
 
+
+
   new_task(event) {
     event.preventDefault();
   let name = this.state.task_form.name;
@@ -55,23 +57,27 @@ class Root extends React.Component {
   let time = this.state.task_form.time;
   let comp = this.state.task_form.complete;
   let user_id = this.state.task_form.user_id;
+
   // console.log(JSON.stringify(this.state.task_form));
 
-  $.ajax("/api/v1/tasks", {
+
+  $.ajax("/api/v1/tasks/", {
     method: "post",
     dataType: "json",
     contentType: "application/json; charset=UTF-8",
-    data: JSON.stringify({tasks: {name, desc, time, comp, user_id}}),
+    data: JSON.stringify({task: {name, desc, time, comp, user_id}}),
     // data: JSON.stringify(this.state.task_form),
-
+    error: (resp) => {
+        alert(JSON.stringify(resp));
+      },
     success: (resp) => {
-      alert("hello");
+      // alert("success" + JSON.stringify(resp));
       // let state1 = _.assign({}, this.state, { session: resp.data });
       // this.setState(state1);
       // let cart1 = _.concat(this.state.tasks, [resp.data]);
       // let state1 = _.assign({}, this.state, { tasks: cart1 });
       // this.setState(state1);
-      // this.fetch_task();
+      this.fetch_tasks();
     }
   });
 }
@@ -137,7 +143,6 @@ class Root extends React.Component {
   }
 
   login() {
-    console.log(this.state.login_form);
   $.ajax("/api/v1/auth", {
     method: "post",
     dataType: "json",
@@ -188,6 +193,19 @@ remove_cart_item(id) {
   });
     }
 
+    enter_time(task, time) {
+      task.time = time;
+      $.ajax("/api/v1/tasks/"+task.id, {
+        method: "put",
+        dataType: "json",
+        headers: {"x-auth": this.state.session.token},
+        contentType: "application/json; charset=UTF-8",
+        data: JSON.stringify({task}),
+        success: (resp) => {
+          this.fetch_tasks();
+      },
+    });
+      }
 
 
 

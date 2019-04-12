@@ -30,7 +30,7 @@ export default function TaskForm(props) {
           </div>
           <div className="form-group">
             <label htmlFor="time">Time </label>
-            <input id="time" onChange={(ev) => root.update_task_form({time: ev.target.value})} className="form-control" step="15"/>
+            <input id="time" type="number" onChange={(ev) => root.update_task_form({time: ev.target.value})} className="form-control" step="15"/>
             <small id="time_help" className="form-text text-muted">Enter time in increments of 15.</small>
           </div>
 
