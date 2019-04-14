@@ -24,8 +24,6 @@ export default function TaskList(props) {
 
 function Task(props) {
   let {root, item, users} = props;
-  let itemID = item.id;
-  // let find_user = _.find(users, ['id', itemID]);
 
 
   return <div className="card col-4">

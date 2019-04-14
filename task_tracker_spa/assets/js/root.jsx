@@ -19,7 +19,6 @@ class Root extends React.Component {
     this.state = {
       login_form: {email: "", password: ""},
       session: null,
-      // tasks: props.tasks,
       tasks: [],
       users: [],
 
@@ -58,61 +57,20 @@ class Root extends React.Component {
   let comp = this.state.task_form.complete;
   let user_id = this.state.task_form.user_id;
 
-  // console.log(JSON.stringify(this.state.task_form));
-
 
   $.ajax("/api/v1/tasks/", {
     method: "post",
     dataType: "json",
     contentType: "application/json; charset=UTF-8",
     data: JSON.stringify({task: {name, desc, time, comp, user_id}}),
-    // data: JSON.stringify(this.state.task_form),
     error: (resp) => {
         alert(JSON.stringify(resp));
       },
     success: (resp) => {
-      // alert("success" + JSON.stringify(resp));
-      // let state1 = _.assign({}, this.state, { session: resp.data });
-      // this.setState(state1);
-      // let cart1 = _.concat(this.state.tasks, [resp.data]);
-      // let state1 = _.assign({}, this.state, { tasks: cart1 });
-      // this.setState(state1);
       this.fetch_tasks();
     }
   });
 }
-
-// new_task(event) {
-//     event.preventDefault();
-//     var formData = new FormData(event.target);
-//     var object = {};
-//     formData.forEach(function(value, key){
-//       object[key] = value;
-//     })
-//     var data = JSON.stringify({task: object});
-//
-//     $.ajax("/api/v1/tasks", {
-//       method: 'post',
-//       dataType: "json",
-//       contentType: "application/json; charset=UTF-8",
-//       data: data,
-//       headers: {"x-auth": this.state.session.token},
-//       error: (resp) => {
-//         alert(resp)
-//       },
-//       success: (resp) => {
-//         store.dispatch({
-//           type: 'TASK_ADD',
-//           data: resp.data,
-//         })
-//         history.push("/")
-//       },
-//     });
-//   }
-
-
-
-
 
   fetch_tasks() {
 
